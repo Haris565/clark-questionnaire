@@ -9,7 +9,6 @@ import Submit from './components/Submit';
 export default function App() {
   const [questions, setQuestions] = useState(data.questionnaire.questions);
   const [question, setQuestion] = useState(0);
-  const [email, setEmail] = useState('');
 
   const mcqsSelectHandler = (id, index) => {
     let findedQuestion = questions.find((item) => item.identifier === id);
@@ -51,10 +50,7 @@ export default function App() {
           element={<Submit homeScreenHandler={homeScreenHandler} />}
         />
       ) : (
-        <Route
-          path='/'
-          element={<Home data={data} email={email} setEmail={setEmail} />}
-        />
+        <Route path='/' element={<Home data={data} />} />
       )}
 
       {questions[question].question_type === 'multiple-choice' && (
