@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Home from './components/Home';
 import Mcqs from './components/Mcqs';
 import data from './Data/questionnaire';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Question from './components/Question';
 import Submit from './components/Submit';
 
@@ -19,6 +19,7 @@ export default function App() {
       }
       return (item.selected = true);
     });
+
     let findIndex = questions.findIndex((item) => item.identifier === id);
     let newQuestions = [...questions];
     newQuestions[findIndex] = findedQuestion;
@@ -26,29 +27,47 @@ export default function App() {
     console.log(newQuestions);
   };
 
-  const nextQuestionHandler = () => {
+  const nextQuestionHandler = (id) => {
+    let filteredQuestion = questions.find((item) => item.identifier === id);
+    if (filteredQuestion.jumps.length > 0) {
+      let selectedAnswer = filteredQuestion?.choices?.filter(
+        (item) => item.selected === true
+      );
+      if (selectedAnswer.length > 0) {
+        filteredQuestion.jumps.map((item) => {
+          if (item.conditions[0].value === selectedAnswer[0].value) {
+            let key = item.destination.id;
+            let findIndex = questions.findIndex(
+              (item) => item.identifier === key
+            );
+            setQuestion(findIndex);
+          }
+        });
+        return;
+      }
+    }
+
     if (question < questions.length - 1) {
       setQuestion((prev) => prev + 1);
     }
   };
+
   const prevQuestionHandler = () => {
     if (question === 0) {
       return;
     }
     setQuestion((prev) => prev - 1);
   };
-  const homeScreenHandler = () => {
-    setQuestions(data.questionnaire.questions);
-    setQuestion(0);
+
+  const textHandler = (id, text) => {
+    let findedQuestion = questions.find((item) => item.identifier === id);
+    findedQuestion.description = text;
   };
 
   return (
     <Routes>
       {question === questions.length - 1 ? (
-        <Route
-          path='/'
-          element={<Submit homeScreenHandler={homeScreenHandler} />}
-        />
+        <Route path='/' element={<Submit />} />
       ) : (
         <Route path='/' element={<Home data={data} />} />
       )}
@@ -80,6 +99,7 @@ export default function App() {
               nextQuestionHandler={nextQuestionHandler}
               totalLength={questions.length}
               currentQuestion={question}
+              textHandler={textHandler}
             />
           }
         />

@@ -10,14 +10,20 @@ function Question({
   nextQuestionHandler,
   totalLength,
   currentQuestion,
+  textHandler,
 }) {
   const inputRef = useRef();
   const [visible, setVisible] = useState(false);
+  const [value, setValue] = useState('');
   const navigate = useNavigate();
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    if (data.description !== null && data.description !== '') {
+      setValue(data.description);
+    }
+
     setVisible(true);
   }, [data]);
 
@@ -54,9 +60,15 @@ function Question({
                 <div className='flex flex-1'>
                   <input
                     ref={inputRef}
+                    value={
+                      data.description !== null && data.description !== ''
+                        ? data.description
+                        : value
+                    }
                     type='text'
                     placeholder='DD/MM/YYYY'
                     className=' flex flex-1 outline-none border-0 bg-transparent border-b-2 text-white text-xl'
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </div>
               )}
@@ -65,10 +77,12 @@ function Question({
                 <div className='flex flex-1'>
                   <textarea
                     ref={inputRef}
+                    value={value}
                     type='text'
                     rows='5'
                     placeholder='Write your comments here'
                     className=' flex flex-1 outline-none bg-transparent border text-white text-sm py-1 px-2 resize-none'
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </div>
               )}
@@ -87,7 +101,9 @@ function Question({
                   <button
                     className='bg-gray-900 text-white py-2 px-5 text-xs'
                     onClick={() => {
+                      textHandler(data.identifier, value);
                       navigate('/');
+                      setValue('');
                     }}
                   >
                     Finish
@@ -97,7 +113,9 @@ function Question({
                     className='bg-gray-900 text-white py-2 px-5 text-xs'
                     onClick={() => {
                       setVisible(false);
-                      nextQuestionHandler();
+                      nextQuestionHandler(data.identifier);
+                      textHandler(data.identifier, value);
+                      setValue('');
                     }}
                   >
                     Next

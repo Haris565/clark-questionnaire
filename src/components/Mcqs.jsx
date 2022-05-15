@@ -99,7 +99,7 @@ function Mcqs({
                     className='bg-gray-900 text-white py-2 px-5 text-xs rounded-lg'
                     onClick={() => {
                       setVisible(false);
-                      nextQuestionHandler();
+                      nextQuestionHandler(data.identifier);
                     }}
                   >
                     Next

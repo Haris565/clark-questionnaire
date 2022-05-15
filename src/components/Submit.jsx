@@ -1,8 +1,6 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import data from '../Data/questionnaire';
-function Submit({ homeScreenHandler }) {
-  const navigate = useNavigate();
+
+function Submit() {
   return (
     <div className='grid grid-cols-10 bg-gradient-to-br from-cyan-800 to-rose-500'>
       <div className='flex w-full h-screen col-span-10'>
