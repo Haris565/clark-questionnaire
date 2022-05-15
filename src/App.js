@@ -17,7 +17,7 @@ export default function App() {
       if (idx !== index) {
         return (item.selected = false);
       }
-      return (item.selected = true);
+      return (item.selected = !item.selected);
     });
 
     let findIndex = questions.findIndex((item) => item.identifier === id);
